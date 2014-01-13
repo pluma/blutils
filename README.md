@@ -2,7 +2,7 @@
 
 **blutils** is a utility library for [bluebird](https://github.com/petkaantonov/bluebird) and a direct fork of [qtils](https://github.com/pluma/qtils).
 
-[![Build Status](https://travis-ci.org/pluma/blutils.png?branch=master)](https://travis-ci.org/pluma/blutils) [![NPM version](https://badge.fury.io/js/blutils.png)](http://badge.fury.io/js/blutils) [![Dependencies](https://david-dm.org/pluma/blutils.png)](https://david-dm.org/pluma/blutils)
+[![Build Status](https://travis-ci.org/pluma/blutils.png?branch=master)](https://travis-ci.org/pluma/blutils) [![Coverage Status](https://coveralls.io/repos/pluma/blutils/badge.png?branch=master)](https://coveralls.io/r/pluma/blutils?branch=master) [![NPM version](https://badge.fury.io/js/blutils.png)](http://badge.fury.io/js/blutils) [![Dependencies](https://david-dm.org/pluma/blutils.png)](https://david-dm.org/pluma/blutils)
 
 # Note
 
