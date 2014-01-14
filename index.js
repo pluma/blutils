@@ -1,4 +1,4 @@
-/*! blutils 0.1.2 Copyright (c) 2014 Alan Plum. MIT licensed. @preserve */
+/*! blutils 0.2.0 Copyright (c) 2014 Alan Plum. MIT licensed. @preserve */
 var Promise = require('bluebird'),
   slice = Function.prototype.call.bind(Array.prototype.slice);
 
@@ -30,6 +30,17 @@ function pallargs() {
 function ptee(fn) {
   return function(arg) {
     return Promise.cast(fn(arg)).thenReturn(arg);
+  };
+}
+
+function pseq() {
+  var fns = slice(arguments, 0);
+  return function(arg) {
+    var p = Promise.cast(arg);
+    fns.forEach(function(fn) {
+      p = p.then(fn);
+    });
+    return p;
   };
 }
 

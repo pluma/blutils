@@ -88,6 +88,21 @@ Promise.cast('foo')
 .then(console.log); // 'foo'
 ```
 
+## seq(fns...):Function
+
+Creates a function that will pass its argument to the given functions in sequence and returns a promise that resolves to the sequence's result.
+
+This is mostly equivalent to `then`ing the functions:
+
+```javascript
+Promise.cast('foo')
+.then(blutils.seq(
+    function(str) {return str.toUpperCase();},
+    function(str) {return str.slice(0, 1).toLowerCase() + str.slice(1);}
+))
+.then(console.log); // 'fOO'
+```
+
 ## eacharg(fns...):Function
 
 Creates a function that will pass each item in an array to each function and returns a promise that will be resolved to an array containing the results.
