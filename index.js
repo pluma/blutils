@@ -1,10 +1,11 @@
-/*! blutils 0.2.0 Copyright (c) 2014 Alan Plum. MIT licensed. @preserve */
+/*! blutils 0.2.1 Copyright (c) 2014 Alan Plum. MIT licensed. @preserve */
 var Promise = require('bluebird'),
   slice = Function.prototype.call.bind(Array.prototype.slice);
 
 exports.eacharg = peacharg;
 exports.allargs = pallargs;
 exports.tee = ptee;
+exports.seq = pseq;
 exports.append = pappend;
 exports.prepend = pprepend;
 exports.transform = ptransform;

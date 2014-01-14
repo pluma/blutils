@@ -27,4 +27,11 @@ describe('blutils.prepend(fn)', function() {
       done();
     });
   });
+  it('unwraps array results', function(done) {
+    prepend(function() {return [2];})(1)
+    .done(function(result) {
+      expect(result).to.eql([2, 1]);
+      done();
+    });
+  });
 });
