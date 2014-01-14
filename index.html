@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="blutils : utilities for bluebird control flow" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>blutils</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/pluma/blutils">View on GitHub</a>
+
+          <h1 id="project_title">blutils</h1>
+          <h2 id="project_tagline">utilities for bluebird control flow</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/pluma/blutils/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/pluma/blutils/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="synopsis" class="anchor" href="#synopsis"><span class="octicon octicon-link"></span></a>Synopsis</h1>
+
+<p><strong>blutils</strong> is a utility library for <a href="https://github.com/petkaantonov/bluebird">bluebird</a> and a direct fork of <a href="https://github.com/pluma/qtils">qtils</a>.</p>
+
+<p><a href="https://travis-ci.org/pluma/blutils"><img src="https://travis-ci.org/pluma/blutils.png?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/r/pluma/blutils?branch=master"><img src="https://coveralls.io/repos/pluma/blutils/badge.png?branch=master" alt="Coverage Status"></a> <a href="http://badge.fury.io/js/blutils"><img src="https://badge.fury.io/js/blutils.png" alt="NPM version"></a> <a href="https://david-dm.org/pluma/blutils"><img src="https://david-dm.org/pluma/blutils.png" alt="Dependencies"></a></p>
+
+<h1>
+<a name="note" class="anchor" href="#note"><span class="octicon octicon-link"></span></a>Note</h1>
+
+<p>When dealing with multiple arguments in promises, it is customary to pass them around as arrays. Until EcmaScript 6 destructuring becomes widely available, this makes promise control flows with multiple promises a bit unpractical when you can't use <code>.spread</code>.</p>
+
+<p>If you find yourself using <code>.spread</code> a lot but still want to give the array manipulation helpers in this library a try, consider using <a href="https://github.com/pluma/spread-args">spread-args</a> to convert functions that take positional arguments into functions that accept a simple argument array.</p>
+
+<h1>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h1>
+
+<h2>
+<a name="with-npm" class="anchor" href="#with-npm"><span class="octicon octicon-link"></span></a>With NPM</h2>
+
+<div class="highlight highlight-sh"><pre>npm install blutils
+</pre></div>
+
+<h2>
+<a name="from-source" class="anchor" href="#from-source"><span class="octicon octicon-link"></span></a>From source</h2>
+
+<div class="highlight highlight-sh"><pre>git clone https://github.com/pluma/blutils.git
+<span class="nb">cd </span>blutils
+npm install
+make <span class="nb">test</span>
+</pre></div>
+
+<h1>
+<a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h1>
+
+<h2>
+<a name="appendfnfunctionfunction" class="anchor" href="#appendfnfunctionfunction"><span class="octicon octicon-link"></span></a>append(fn:Function):Function</h2>
+
+<p>Creates a function that will pass its argument to the given function and returns a promise that will be resolved to the function's result appended to the argument.</p>
+
+<p>If the argument is not an <code>Array</code>, it will be wrapped in one before the result is appended.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">'f'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">);</span>
+<span class="p">}))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// ['foo', 'boo']</span>
+</pre></div>
+
+<h2>
+<a name="prependfnfunctionfunction" class="anchor" href="#prependfnfunctionfunction"><span class="octicon octicon-link"></span></a>prepend(fn:Function):Function</h2>
+
+<p>Creates a function that will pass its argument to the given function and returns a promise that will be resolved to the function's result prepended to the argument.</p>
+
+<p>If the argument is not an <code>Array</code>, it will be wrapped in one before the result is prepended.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">prepend</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">'f'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">);</span>
+<span class="p">}))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// ['boo', 'foo']</span>
+</pre></div>
+
+<h2>
+<a name="teefnfunctionfunction" class="anchor" href="#teefnfunctionfunction"><span class="octicon octicon-link"></span></a>tee(fn:Function):Function</h2>
+
+<p>Creates a function that will pass its argument to the given function and returns a promise that will be resolved to the argument when the function's result is fulfilled.</p>
+
+<p>In other words, <code>tee</code> allows you to add <code>then</code>able side-effects to a promise chain (without having to modify them so they return their inputs).</p>
+
+<p>Example without <code>tee</code>:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Result is:'</span><span class="p">,</span> <span class="nx">str</span><span class="p">);</span> <span class="c1">// 'Result is: "foo"'</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">;</span> <span class="c1">// Must return the input or next `then` will see `null`</span>
+<span class="p">})</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// 'foo'</span>
+</pre></div>
+
+<p>Example with <code>tee</code>:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">tee</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Result is:'</span><span class="p">,</span> <span class="nx">str</span><span class="p">);</span> <span class="c1">// 'Result is: "foo"'</span>
+<span class="p">}))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// 'foo'</span>
+</pre></div>
+
+<h2>
+<a name="seqfnsfunction" class="anchor" href="#seqfnsfunction"><span class="octicon octicon-link"></span></a>seq(fns...):Function</h2>
+
+<p>Creates a function that will pass its argument to the given functions in sequence and returns a promise that resolves to the sequence's result.</p>
+
+<p>This is mostly equivalent to <code>then</code>ing the functions:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">seq</span><span class="p">(</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();},</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">+</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">);}</span>
+<span class="p">))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// 'fOO'</span>
+</pre></div>
+
+<h2>
+<a name="eachargfnsfunction" class="anchor" href="#eachargfnsfunction"><span class="octicon octicon-link"></span></a>eacharg(fns...):Function</h2>
+
+<p>Creates a function that will pass each item in an array to each function and returns a promise that will be resolved to an array containing the results.</p>
+
+<p>If the number of functions is smaller than the number of items in the array, it will loop over the functions.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">([</span><span class="s1">'Foo'</span><span class="p">,</span> <span class="s1">'Bar'</span><span class="p">,</span> <span class="s1">'Qux'</span><span class="p">])</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">eacharg</span><span class="p">(</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();},</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();}</span>
+<span class="p">))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// ['FOO', 'bar', 'QUX']</span>
+</pre></div>
+
+<h2>
+<a name="allargsfnsfunction" class="anchor" href="#allargsfnsfunction"><span class="octicon octicon-link"></span></a>allargs(fns...):Function</h2>
+
+<p>Creates a function that will pass its argument to each function and returns a promise that will be resolved to an array containing the results.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">([</span><span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">,</span> <span class="s1">'qux'</span><span class="p">])</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">allargs</span><span class="p">(</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">'-'</span><span class="p">);},</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">'+'</span><span class="p">);}</span>
+<span class="p">))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// ['foo-bar-qux', 'foo+bar+qux']</span>
+</pre></div>
+
+<h2>
+<a name="transformpropsobject-optsfunction" class="anchor" href="#transformpropsobject-optsfunction"><span class="octicon octicon-link"></span></a>transform(props:Object, [opts]):Function</h2>
+
+<p>Creates a function that takes an object and will apply the given transformations to its properties and then returns a promise resolving to the result object.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span><span class="nx">firstName</span><span class="o">:</span> <span class="s1">'John'</span><span class="p">,</span> <span class="nx">lastName</span><span class="o">:</span> <span class="s1">'Doe'</span><span class="p">};</span>
+<span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="nx">person</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">transform</span><span class="p">({</span>
+    <span class="nx">lastName</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();}</span>
+<span class="p">}))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span> <span class="c1">// {lastName: 'DOE'}</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person</span><span class="p">);</span> <span class="c1">// {firstName: 'John', lastName: 'Doe'}</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>If a transformation is not a function, it will be passed through as the transformation result for that property:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">({</span><span class="nx">foo</span><span class="o">:</span> <span class="s1">'x'</span><span class="p">,</span> <span class="nx">bar</span><span class="o">:</span> <span class="s1">'y'</span><span class="p">})</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">transform</span><span class="p">({</span>
+    <span class="nx">foo</span><span class="o">:</span> <span class="s1">'static'</span><span class="p">,</span>
+    <span class="nx">bar</span><span class="o">:</span> <span class="mi">5</span>
+<span class="p">},</span> <span class="kc">true</span><span class="p">))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">foo</span><span class="p">);</span> <span class="c1">// 'static'</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">bar</span><span class="p">);</span> <span class="c1">// 5</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="optskeepboolean-default-false" class="anchor" href="#optskeepboolean-default-false"><span class="octicon octicon-link"></span></a>opts.keep:Boolean (default: false)</h3>
+
+<p>If <code>keep</code> is <code>true</code>, any properties that have no matching transformation will be copied to the result object verbatim. Otherwise they will be omitted.</p>
+
+<p>Example with <code>keep = true</code>:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span><span class="nx">firstName</span><span class="o">:</span> <span class="s1">'John'</span><span class="p">,</span> <span class="nx">lastName</span><span class="o">:</span> <span class="s1">'Doe'</span><span class="p">};</span>
+<span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="nx">person</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">transform</span><span class="p">({</span>
+    <span class="nx">lastName</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();}</span>
+<span class="p">},</span> <span class="p">{</span><span class="nx">keep</span><span class="o">:</span> <span class="kc">true</span><span class="p">}))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span> <span class="c1">// {firstName: 'John', lastName: 'DOE'}</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">person</span><span class="p">);</span> <span class="c1">// {firstName: 'John', lastName: 'Doe'}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="optsskipmissingboolean-default-false" class="anchor" href="#optsskipmissingboolean-default-false"><span class="octicon octicon-link"></span></a>opts.skipMissing:Boolean (default: false)</h3>
+
+<p>If <code>keepMissing</code> is <code>true</code>, any properties missing on the object will be omitted. Otherwise their transformations will be executed as if they were set to <code>undefined</code>.</p>
+
+<p>Example with <code>skipMissing = true</code>:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">({})</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">transform</span><span class="p">({</span>
+    <span class="nx">bar</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();}</span>
+<span class="p">},</span> <span class="p">{</span><span class="nx">skipMissing</span><span class="o">:</span> <span class="kc">true</span><span class="p">}))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// {}</span>
+</pre></div>
+
+<p>Example with <code>skipMissing = false</code>:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">({})</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">transform</span><span class="p">({</span>
+    <span class="nx">bar</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">x</span><span class="p">;}</span>
+<span class="p">},</span> <span class="p">{</span><span class="nx">skipMissing</span><span class="o">:</span> <span class="kc">false</span><span class="p">}))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// {bar: undefined}</span>
+</pre></div>
+
+<h1>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h1>
+
+<p>The MIT/Expat license.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">blutils maintained by <a href="https://github.com/pluma">pluma</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
