@@ -140,6 +140,51 @@ make <span class="nb">test</span>
 </pre></div>
 
 <h2>
+<a name="guardfn-handlerejectionfunction" class="anchor" href="#guardfn-handlerejectionfunction"><span class="octicon octicon-link"></span></a>guard(fn, handleRejection):Function</h2>
+
+<p>Creates a function that will pass its argument to the given function and returns a promise that resolves to the sequence's result or the result of <code>handleRejection</code> if the function fails.</p>
+
+<p>Naive example without <code>guard</code>:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">frobnicateDoodads</span><span class="p">()</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">embiggenDoodads</span><span class="p">)</span>
+<span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">recoverFromEmbiggeningFailure</span><span class="p">)</span> <span class="c1">// will also trigger if frobnication fails</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">rasterizeDoodads</span><span class="p">)</span>
+<span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">recoverFromRasterizationFailure</span><span class="p">)</span> <span class="c1">// will also trigger if recovery from embiggening failure fails</span>
+<span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="nx">logResults</span><span class="p">,</span> <span class="nx">logFailure</span><span class="p">);</span>
+</pre></div>
+
+<p>Non-naive example without <code>guard</code>:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">frobnicateDoodads</span><span class="p">()</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">doodads</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="nx">doodads</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">embiggenDoodads</span><span class="p">)</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">recoverFromEmbiggeningFailure</span><span class="p">);</span>
+<span class="p">})</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">doodads</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="nx">doodads</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">rasterizeDoodads</span><span class="p">)</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">recoverFromRasterizationFailure</span><span class="p">);</span>
+<span class="p">})</span>
+<span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="nx">logResults</span><span class="p">,</span> <span class="nx">logFailure</span><span class="p">);</span>
+</pre></div>
+
+<p>Example with <code>guard</code>:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">frobnicateDoodads</span><span class="p">()</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">guard</span><span class="p">(</span> <span class="c1">// only called if frobnication was successful</span>
+    <span class="nx">embiggenDoodads</span><span class="p">,</span>
+    <span class="nx">recoverFromEmbiggeningFailure</span> <span class="c1">// only catches embiggening failures</span>
+<span class="p">))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">guard</span><span class="p">(</span> <span class="c1">// only called if embiggening was successful</span>
+    <span class="nx">rasterizeDoodads</span><span class="p">,</span>
+    <span class="nx">recoverFromRasterizationFailure</span> <span class="c1">// only catches rasterization failures</span>
+<span class="p">))</span>
+<span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="nx">logResults</span><span class="p">,</span> <span class="nx">logFailure</span><span class="p">);</span>
+</pre></div>
+
+<h2>
 <a name="eachargfnsfunction" class="anchor" href="#eachargfnsfunction"><span class="octicon octicon-link"></span></a>eacharg(fns...):Function</h2>
 
 <p>Creates a function that will pass each item in an array to each function and returns a promise that will be resolved to an array containing the results.</p>
