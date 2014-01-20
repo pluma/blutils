@@ -1,4 +1,4 @@
-/*! blutils 0.2.1 Copyright (c) 2014 Alan Plum. MIT licensed. @preserve */
+/*! blutils 0.3.0 Copyright (c) 2014 Alan Plum. MIT licensed. @preserve */
 var Promise = require('bluebird'),
   slice = Function.prototype.call.bind(Array.prototype.slice);
 
@@ -9,6 +9,7 @@ exports.seq = pseq;
 exports.append = pappend;
 exports.prepend = pprepend;
 exports.transform = ptransform;
+exports.guard = pguard;
 
 function peacharg() {
   var fns = slice(arguments, 0), n = fns.length;
@@ -89,5 +90,17 @@ function ptransform(props, opts) {
       });
     }))
     .thenReturn(result);
+  };
+}
+
+function pguard(fn, handleFail) {
+  return function(value) {
+    try {
+      return Promise
+      .cast(fn(value))
+      .catch(handleFail);
+    } catch(err) {
+      return handleFail(err);
+    }
   };
 }

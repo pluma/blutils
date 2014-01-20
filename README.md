@@ -103,6 +103,53 @@ Promise.cast('foo')
 .then(console.log); // 'fOO'
 ```
 
+## guard(fn, handleRejection):Function
+
+Creates a function that will pass its argument to the given function and returns a promise that resolves to the sequence's result or the result of `handleRejection` if the function fails.
+
+Naive example without `guard`:
+
+```javascript
+frobnicateDoodads()
+.then(embiggenDoodads)
+.catch(recoverFromEmbiggeningFailure) // will also trigger if frobnication fails
+.then(rasterizeDoodads)
+.catch(recoverFromRasterizationFailure) // will also trigger if recovery from embiggening failure fails
+.done(logResults, logFailure);
+```
+
+Non-naive example without `guard`:
+
+```javascript
+frobnicateDoodads()
+.then(function(doodads) {
+    return Promise.cast(doodads)
+    .then(embiggenDoodads)
+    .catch(recoverFromEmbiggeningFailure);
+})
+.then(function(doodads) {
+    return Promise.cast(doodads)
+    .then(rasterizeDoodads)
+    .catch(recoverFromRasterizationFailure);
+})
+.done(logResults, logFailure);
+```
+
+Example with `guard`:
+
+```javascript
+frobnicateDoodads()
+.then(blutils.guard( // only called if frobnication was successful
+    embiggenDoodads,
+    recoverFromEmbiggeningFailure // only catches embiggening failures
+))
+.then(blutils.guard( // only called if embiggening was successful
+    rasterizeDoodads,
+    recoverFromRasterizationFailure // only catches rasterization failures
+))
+.done(logResults, logFailure);
+```
+
 ## eacharg(fns...):Function
 
 Creates a function that will pass each item in an array to each function and returns a promise that will be resolved to an array containing the results.
