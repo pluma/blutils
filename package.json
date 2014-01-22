@@ -1,6 +1,6 @@
 {
   "name": "blutils",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "Alan Plum <me@pluma.io>",
   "description": "Utilities for bluebird control flow.",
   "repository": {

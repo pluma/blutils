@@ -1,4 +1,4 @@
-/*! blutils 0.3.0 Copyright (c) 2014 Alan Plum. MIT licensed. @preserve */
+/*! blutils 0.4.0 Copyright (c) 2014 Alan Plum. MIT licensed. @preserve */
 var Promise = require('bluebird'),
   slice = Function.prototype.call.bind(Array.prototype.slice);
 
@@ -8,7 +8,6 @@ exports.tee = ptee;
 exports.seq = pseq;
 exports.append = pappend;
 exports.prepend = pprepend;
-exports.transform = ptransform;
 exports.guard = pguard;
 
 function peacharg() {
@@ -59,37 +58,6 @@ function pprepend(fn) {
     return Promise.cast(fn(arg)).then(function(result) {
       return Promise.all((Array.isArray(result) ? result : [result]).concat(arg));
     });
-  };
-}
-
-function ptransform(props, opts) {
-  props = props || {};
-  opts = opts || {keep: false, skipMissing: false};
-  var keys = Object.keys(props);
-  return function(data) {
-    var dataKeys = Object.keys(data),
-      result = {};
-
-    if (opts.keep) {
-      dataKeys.forEach(function(key) {
-        result[key] = data[key];
-      });
-    }
-
-    if (opts.skipMissing) {
-      keys = keys.filter(function(key) {
-        return ~dataKeys.indexOf(key);
-      });
-    }
-
-    return Promise.all(keys.map(function(key) {
-      var trans = props[key];
-      return Promise.cast(typeof trans === 'function' ? trans(data[key]) : trans)
-      .then(function(value) {
-        result[key] = value;
-      });
-    }))
-    .thenReturn(result);
   };
 }
 

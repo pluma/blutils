@@ -10,6 +10,8 @@ When dealing with multiple arguments in promises, it is customary to pass them a
 
 If you find yourself using `.spread` a lot but still want to give the array manipulation helpers in this library a try, consider using [spread-args](https://github.com/pluma/spread-args) to convert functions that take positional arguments into functions that accept a simple argument array.
 
+As of version 0.4, `blutils.transform` has been removed. Consider using [transform-object](https://github.com/pluma/transform-object) instead.
+
 # Install
 
 ## With NPM
@@ -180,80 +182,6 @@ Promise.cast(['foo', 'bar', 'qux'])
     function(arr) {return arr.join('+');}
 ))
 .then(console.log); // ['foo-bar-qux', 'foo+bar+qux']
-```
-
-## transform(props:Object, [opts]):Function
-
-Creates a function that takes an object and will apply the given transformations to its properties and then returns a promise resolving to the result object.
-
-Example:
-
-```javascript
-var person = {firstName: 'John', lastName: 'Doe'};
-Promise.cast(person)
-.then(blutils.transform({
-    lastName: function(str) {return str.toUpperCase();}
-}))
-.then(function(result) {
-    console.log(result); // {lastName: 'DOE'}
-    console.log(person); // {firstName: 'John', lastName: 'Doe'}
-});
-```
-
-If a transformation is not a function, it will be passed through as the transformation result for that property:
-
-```javascript
-Promise.cast({foo: 'x', bar: 'y'})
-.then(blutils.transform({
-    foo: 'static',
-    bar: 5
-}, true))
-.then(function(result) {
-    console.log(result.foo); // 'static'
-    console.log(result.bar); // 5
-});
-```
-
-### opts.keep:Boolean (default: false)
-
-If `keep` is `true`, any properties that have no matching transformation will be copied to the result object verbatim. Otherwise they will be omitted.
-
-Example with `keep = true`:
-
-```javascript
-var person = {firstName: 'John', lastName: 'Doe'};
-Promise.cast(person)
-.then(blutils.transform({
-    lastName: function(str) {return str.toUpperCase();}
-}, {keep: true}))
-.then(function(result) {
-    console.log(result); // {firstName: 'John', lastName: 'DOE'}
-    console.log(person); // {firstName: 'John', lastName: 'Doe'}
-});
-```
-
-### opts.skipMissing:Boolean (default: false)
-
-If `keepMissing` is `true`, any properties missing on the object will be omitted. Otherwise their transformations will be executed as if they were set to `undefined`.
-
-Example with `skipMissing = true`:
-
-```javascript
-Promise.cast({})
-.then(blutils.transform({
-    bar: function(str) {return str.toUpperCase();}
-}, {skipMissing: true}))
-.then(console.log); // {}
-```
-
-Example with `skipMissing = false`:
-
-```javascript
-Promise.cast({})
-.then(blutils.transform({
-    bar: function(x) {return x;}
-}, {skipMissing: false}))
-.then(console.log); // {bar: undefined}
 ```
 
 # License
