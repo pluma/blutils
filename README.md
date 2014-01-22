@@ -184,6 +184,6 @@ Promise.cast(['foo', 'bar', 'qux'])
 .then(console.log); // ['foo-bar-qux', 'foo+bar+qux']
 ```
 
-# License
+# Unlicense
 
-The MIT/Expat license.
+This is free and unencumbered public domain software. For more information, see http://unlicense.org/ or the accompanying [UNLICENSE](https://github.com/pluma/blutils/blob/master/UNLICENSE) file.

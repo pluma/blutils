@@ -1,4 +1,4 @@
-/*! blutils 0.4.0 Copyright (c) 2014 Alan Plum. MIT licensed. @preserve */
+/*! blutils 0.4.0 Original author Alan Plum <me@pluma.io>. Released into the Public Domain under the UNLICENSE. @preserve */
 var Promise = require('bluebird'),
   slice = Function.prototype.call.bind(Array.prototype.slice);
 
