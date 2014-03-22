@@ -1,6 +1,6 @@
 {
   "name": "blutils",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "author": "Alan Plum <me@pluma.io>",
   "description": "Utilities for bluebird control flow.",
   "licenses": {
@@ -24,11 +24,11 @@
     "bluebird": "~1.1"
   },
   "devDependencies": {
-    "mocha": "~1.17",
+    "mocha": "~1.18",
     "expect.js": "~0.3",
     "jshint": "~2.4",
     "istanbul": "~0.2",
-    "coveralls": "~2.8"
+    "coveralls": "~2.10"
   },
   "main": "index.js",
   "scripts": {
