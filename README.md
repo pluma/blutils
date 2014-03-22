@@ -35,9 +35,24 @@ make test
 
 # API
 
-## append(fn:Function):Function
+## seq(fns...):Function
 
-Creates a function that will pass its argument to the given function and returns a promise that will be resolved to the function's result appended to the argument.
+Creates a function that will pass its argument to the given sequence of functions and returns a promise that resolves to the sequence's result.
+
+This is mostly equivalent to `then`ing the functions:
+
+```javascript
+Promise.cast('qux')
+.then(blutils.seq(
+    function(str) {return str.toUpperCase();},
+    function(str) {return str.slice(0, 1).toLowerCase() + str.slice(1);}
+))
+.then(console.log); // 'qUX'
+```
+
+## append(fns...):Function
+
+Creates a function that will pass its argument to the given sequence of functions and returns a promise that will be resolved to the functions' result appended to the argument.
 
 If the argument is not an `Array`, it will be wrapped in one before the result is appended.
 
@@ -45,15 +60,20 @@ Example:
 
 ```javascript
 Promise.cast('foo')
-.then(blutils.append(function(str) {
-    return str.replace('f', 'b');
-}))
+.then(blutils.append(
+    function(str) {
+        return str.replace('f', 'b');
+    },
+    function(str) {
+        return str.replace('oo', 'ar');
+    }
+))
 .then(console.log); // ['foo', 'boo']
 ```
 
-## prepend(fn:Function):Function
+## prepend(fns...):Function
 
-Creates a function that will pass its argument to the given function and returns a promise that will be resolved to the function's result prepended to the argument.
+Creates a function that will pass its argument to the given sequence of functions and returns a promise that will be resolved to the functions' result prepended to the argument.
 
 If the argument is not an `Array`, it will be wrapped in one before the result is prepended.
 
@@ -61,15 +81,20 @@ Example:
 
 ```javascript
 Promise.cast('foo')
-.then(blutils.prepend(function(str) {
-    return str.replace('f', 'b');
-}))
-.then(console.log); // ['boo', 'foo']
+.then(blutils.prepend(
+    function(str) {
+        return str.replace('f', 'b');
+    },
+    function(str) {
+        return str.replace('oo', 'ar');
+    }
+))
+.then(console.log); // ['bar', 'foo']
 ```
 
-## tee(fn:Function):Function
+## tee(fns...):Function
 
-Creates a function that will pass its argument to the given function and returns a promise that will be resolved to the argument when the function's result is fulfilled.
+Creates a function that will pass its argument to the given sequence of functions and returns a promise that will be resolved to the argument when the function's result is fulfilled.
 
 In other words, `tee` allows you to add `then`able side-effects to a promise chain (without having to modify them so they return their inputs).
 
@@ -92,21 +117,6 @@ Promise.cast('foo')
     console.log('Result is:', str); // 'Result is: "foo"'
 }))
 .then(console.log); // 'foo'
-```
-
-## seq(fns...):Function
-
-Creates a function that will pass its argument to the given functions in sequence and returns a promise that resolves to the sequence's result.
-
-This is mostly equivalent to `then`ing the functions:
-
-```javascript
-Promise.cast('foo')
-.then(blutils.seq(
-    function(str) {return str.toUpperCase();},
-    function(str) {return str.slice(0, 1).toLowerCase() + str.slice(1);}
-))
-.then(console.log); // 'fOO'
 ```
 
 ## guard(fn, handleRejection):Function

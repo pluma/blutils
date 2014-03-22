@@ -3,7 +3,7 @@ var expect = require('expect.js'),
   Promise = require('bluebird'),
   tee = require('../').tee;
 
-describe('blutils.tee(fn)', function() {
+describe('blutils.tee(fns...)', function() {
   it('is a function', function() {
     expect(tee()).to.be.a('function');
   });
@@ -29,6 +29,19 @@ describe('blutils.tee(fn)', function() {
     .then(tee(function() {called = true;}))
     .done(function() {
       expect(called).to.equal(true);
+      done();
+    });
+  });
+  it('applies each function in sequence', function(done) {
+    var timesCalled = 0;
+    Promise.cast(5)
+    .then(tee(
+      function() {timesCalled += 1;},
+      function() {timesCalled += 1;}
+    ))
+    .done(function(result) {
+      expect(result).to.eql(5);
+      expect(timesCalled).to.eql(2);
       done();
     });
   });
