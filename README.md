@@ -198,6 +198,37 @@ Promise.cast(['foo', 'bar', 'qux'])
 .then(console.log); // ['foo-bar-qux', 'foo+bar+qux']
 ```
 
+## mutate(mutation:Object):Function
+
+Creates a function that will mutate its argument by applying the each function of the given mutation object to each property value (or array item) of the argument.
+
+The function returns a promise that resolves to the mutated object when all mutation results have resolved or is rejected if any of the mutation results are rejected.
+
+The mutations modify properties of the input object in-place.
+
+Example:
+
+```javascript
+Promise.cast(['foo', 'bar', 'qux'])
+.then(blutils.mutate({
+    0: function(arg) {return arg.toUpperCase();},
+    2: function(arg) {return Promise.cast(arg.toUpperCase());}
+}))
+.then(console.log); // ['FOO', 'bar', 'QUX']
+```
+
+Nesting example:
+
+```javascript
+Promise.cast(['foo', 'bar', {qux: 'baz', soup: 'chunky'}])
+.then(blutils.mutate({
+    2: {
+        qux: function(arg) {return arg.toUpperCase();}
+    }
+}))
+.then(console.log); // ['foo', 'bar', {qux: 'BAZ', soup: 'chunky'}]
+```
+
 # Unlicense
 
 This is free and unencumbered public domain software. For more information, see http://unlicense.org/ or the accompanying [UNLICENSE](https://github.com/pluma/blutils/blob/master/UNLICENSE) file.
