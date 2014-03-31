@@ -1,4 +1,4 @@
-/*! blutils 0.7.0 Original author Alan Plum <me@pluma.io>. Released into the Public Domain under the UNLICENSE. @preserve */
+/*! blutils 0.7.1 Original author Alan Plum <me@pluma.io>. Released into the Public Domain under the UNLICENSE. @preserve */
 var Promise = require('bluebird'),
   slice = Function.prototype.call.bind(Array.prototype.slice);
 
@@ -6,8 +6,8 @@ exports.eacharg = peacharg;
 exports.allargs = pallargs;
 exports.tee = ptee;
 exports.seq = pseq;
-exports.append = pappend;
-exports.prepend = pprepend;
+exports.append = _pappend(false);
+exports.prepend = _pappend(true);
 exports.guard = pguard;
 exports.mutate = pmutate;
 
@@ -51,33 +51,22 @@ function pseq() {
   };
 }
 
-function pappend() {
-  var fns = slice(arguments, 0);
-  return function(arg) {
-    var p = Promise.cast(arg);
-    fns.forEach(function(fn) {
-      p = p.then(fn);
-    });
-    return p.then(function(result) {
-      return Promise.all(
-        (Array.isArray(arg) ? arg : [arg]).concat(result)
-      );
-    });
-  };
-}
-
-function pprepend() {
-  var fns = slice(arguments, 0);
-  return function(arg) {
-    var p = Promise.cast(arg);
-    fns.forEach(function(fn) {
-      p = p.then(fn);
-    });
-    return p.then(function(result) {
-      return Promise.all(
-        (Array.isArray(result) ? result : [result]).concat(arg)
-      );
-    });
+function _pappend(prepend) {
+  return function() {
+    var fns = slice(arguments, 0);
+    return function(arg) {
+      var p = Promise.cast(arg);
+      fns.forEach(function(fn) {
+        p = p.then(fn);
+      });
+      return p.then(function(result) {
+        return Promise.all(
+          prepend
+          ? (Array.isArray(result) ? result : [result]).concat(arg)
+          : (Array.isArray(arg) ? arg : [arg]).concat(result)
+        );
+      });
+    };
   };
 }
 
