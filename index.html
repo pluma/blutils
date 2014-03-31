@@ -38,9 +38,11 @@
 
 <p><a href="http://nodejs.org/api/documentation.html#documentation_stability_index"><img src="http://b.repl.ca/v1/stability-2_--_unstable-yellow.png" alt="stability 2 - unstable"></a> <a href="http://unlicense.org/"><img src="http://b.repl.ca/v1/license-Unlicense-lightgrey.png" alt="license - Unlicense"></a> <a href="https://flattr.com/submit/auto?user_id=pluma&amp;url=https://github.com/pluma/blutils"><img src="https://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this"></a></p>
 
-<p><a href="https://travis-ci.org/pluma/blutils"><img src="https://travis-ci.org/pluma/blutils.png?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/r/pluma/blutils?branch=master"><img src="https://coveralls.io/repos/pluma/blutils/badge.png?branch=master" alt="Coverage Status"></a> <a href="https://david-dm.org/pluma/blutils"><img src="https://david-dm.org/pluma/blutils.png?theme=shields.io" alt="Dependencies"></a></p>
+<p><a href="https://travis-ci.org/pluma/blutils"><img src="https://travis-ci.org/pluma/blutils.png?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/r/pluma/blutils?branch=master"><img src="https://coveralls.io/repos/pluma/blutils/badge.png?branch=master" alt="Coverage Status"></a> <a href="https://codeclimate.com/github/pluma/blutils"><img src="https://codeclimate.com/github/pluma/blutils.png" alt="Code Climate"></a></p>
 
 <p><a href="https://npmjs.org/package/blutils"><img src="https://nodei.co/npm/blutils.png?compact=true" alt="NPM status"></a></p>
+
+<p><a href="https://david-dm.org/pluma/blutils"><img src="https://david-dm.org/pluma/blutils.png?theme=shields.io" alt="Dependencies"></a></p>
 
 <h1>
 <a name="note" class="anchor" href="#note"><span class="octicon octicon-link"></span></a>Note</h1>
@@ -48,8 +50,6 @@
 <p>When dealing with multiple arguments in promises, it is customary to pass them around as arrays. Until EcmaScript 6 destructuring becomes widely available, this makes promise control flows with multiple promises a bit unpractical when you can't use <code>.spread</code>.</p>
 
 <p>If you find yourself using <code>.spread</code> a lot but still want to give the array manipulation helpers in this library a try, consider using <a href="https://github.com/pluma/spread-args">spread-args</a> to convert functions that take positional arguments into functions that accept a simple argument array.</p>
-
-<p>As of version 0.4, <code>blutils.transform</code> has been removed. Consider using <a href="https://github.com/pluma/transform-object">transform-object</a> instead.</p>
 
 <h1>
 <a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h1>
@@ -73,41 +73,66 @@ make <span class="nb">test</span>
 <a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h1>
 
 <h2>
-<a name="appendfnfunctionfunction" class="anchor" href="#appendfnfunctionfunction"><span class="octicon octicon-link"></span></a>append(fn:Function):Function</h2>
+<a name="seqfnsfunction" class="anchor" href="#seqfnsfunction"><span class="octicon octicon-link"></span></a>seq(fns...):Function</h2>
 
-<p>Creates a function that will pass its argument to the given function and returns a promise that will be resolved to the function's result appended to the argument.</p>
+<p>Creates a function that will pass its argument to the given sequence of functions and returns a promise that resolves to the sequence's result.</p>
+
+<p>This is mostly equivalent to <code>then</code>ing the functions:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="s1">'qux'</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">seq</span><span class="p">(</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();},</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">+</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">);}</span>
+<span class="p">))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// 'qUX'</span>
+</pre></div>
+
+<h2>
+<a name="appendfnsfunction" class="anchor" href="#appendfnsfunction"><span class="octicon octicon-link"></span></a>append(fns...):Function</h2>
+
+<p>Creates a function that will pass its argument to the given sequence of functions and returns a promise that will be resolved to the functions' result appended to the argument.</p>
 
 <p>If the argument is not an <code>Array</code>, it will be wrapped in one before the result is appended.</p>
 
 <p>Example:</p>
 
 <div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span>
-<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">'f'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">);</span>
-<span class="p">}))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">'f'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">'oo'</span><span class="p">,</span> <span class="s1">'ar'</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">))</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// ['foo', 'boo']</span>
 </pre></div>
 
 <h2>
-<a name="prependfnfunctionfunction" class="anchor" href="#prependfnfunctionfunction"><span class="octicon octicon-link"></span></a>prepend(fn:Function):Function</h2>
+<a name="prependfnsfunction" class="anchor" href="#prependfnsfunction"><span class="octicon octicon-link"></span></a>prepend(fns...):Function</h2>
 
-<p>Creates a function that will pass its argument to the given function and returns a promise that will be resolved to the function's result prepended to the argument.</p>
+<p>Creates a function that will pass its argument to the given sequence of functions and returns a promise that will be resolved to the functions' result prepended to the argument.</p>
 
 <p>If the argument is not an <code>Array</code>, it will be wrapped in one before the result is prepended.</p>
 
 <p>Example:</p>
 
 <div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span>
-<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">prepend</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">'f'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">);</span>
-<span class="p">}))</span>
-<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// ['boo', 'foo']</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">prepend</span><span class="p">(</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">'f'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">'oo'</span><span class="p">,</span> <span class="s1">'ar'</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// ['bar', 'foo']</span>
 </pre></div>
 
 <h2>
-<a name="teefnfunctionfunction" class="anchor" href="#teefnfunctionfunction"><span class="octicon octicon-link"></span></a>tee(fn:Function):Function</h2>
+<a name="teefnsfunction" class="anchor" href="#teefnsfunction"><span class="octicon octicon-link"></span></a>tee(fns...):Function</h2>
 
-<p>Creates a function that will pass its argument to the given function and returns a promise that will be resolved to the argument when the function's result is fulfilled.</p>
+<p>Creates a function that will pass its argument to the given sequence of functions and returns a promise that will be resolved to the argument when the function's result is fulfilled.</p>
 
 <p>In other words, <code>tee</code> allows you to add <code>then</code>able side-effects to a promise chain (without having to modify them so they return their inputs).</p>
 
@@ -128,21 +153,6 @@ make <span class="nb">test</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Result is:'</span><span class="p">,</span> <span class="nx">str</span><span class="p">);</span> <span class="c1">// 'Result is: "foo"'</span>
 <span class="p">}))</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// 'foo'</span>
-</pre></div>
-
-<h2>
-<a name="seqfnsfunction" class="anchor" href="#seqfnsfunction"><span class="octicon octicon-link"></span></a>seq(fns...):Function</h2>
-
-<p>Creates a function that will pass its argument to the given functions in sequence and returns a promise that resolves to the sequence's result.</p>
-
-<p>This is mostly equivalent to <code>then</code>ing the functions:</p>
-
-<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">)</span>
-<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">seq</span><span class="p">(</span>
-    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();},</span>
-    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">+</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">);}</span>
-<span class="p">))</span>
-<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// 'fOO'</span>
 </pre></div>
 
 <h2>
@@ -220,6 +230,36 @@ make <span class="nb">test</span>
     <span class="kd">function</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">'+'</span><span class="p">);}</span>
 <span class="p">))</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// ['foo-bar-qux', 'foo+bar+qux']</span>
+</pre></div>
+
+<h2>
+<a name="mutatemutationobjectfunction" class="anchor" href="#mutatemutationobjectfunction"><span class="octicon octicon-link"></span></a>mutate(mutation:Object):Function</h2>
+
+<p>Creates a function that will mutate its argument by applying the each function of the given mutation object to each property value (or array item) of the argument.</p>
+
+<p>The function returns a promise that resolves to the mutated object when all mutation results have resolved or is rejected if any of the mutation results are rejected.</p>
+
+<p>The mutations modify properties of the input object in-place.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">([</span><span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">,</span> <span class="s1">'qux'</span><span class="p">])</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">mutate</span><span class="p">({</span>
+    <span class="mi">0</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">arg</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();},</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">(</span><span class="nx">arg</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">());}</span>
+<span class="p">}))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// ['FOO', 'bar', 'QUX']</span>
+</pre></div>
+
+<p>Nesting example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Promise</span><span class="p">.</span><span class="nx">cast</span><span class="p">([</span><span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">,</span> <span class="p">{</span><span class="nx">qux</span><span class="o">:</span> <span class="s1">'baz'</span><span class="p">,</span> <span class="nx">soup</span><span class="o">:</span> <span class="s1">'chunky'</span><span class="p">}])</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">blutils</span><span class="p">.</span><span class="nx">mutate</span><span class="p">({</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">qux</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span> <span class="p">{</span><span class="k">return</span> <span class="nx">arg</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();}</span>
+    <span class="p">}</span>
+<span class="p">}))</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span> <span class="c1">// ['foo', 'bar', {qux: 'BAZ', soup: 'chunky'}]</span>
 </pre></div>
 
 <h1>
