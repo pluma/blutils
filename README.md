@@ -4,9 +4,11 @@
 
 [![stability 2 - unstable](http://b.repl.ca/v1/stability-2_--_unstable-yellow.png)](http://nodejs.org/api/documentation.html#documentation_stability_index) [![license - Unlicense](http://b.repl.ca/v1/license-Unlicense-lightgrey.png)](http://unlicense.org/) [![Flattr this](https://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=pluma&url=https://github.com/pluma/blutils)
 
-[![Build Status](https://travis-ci.org/pluma/blutils.png?branch=master)](https://travis-ci.org/pluma/blutils) [![Coverage Status](https://coveralls.io/repos/pluma/blutils/badge.png?branch=master)](https://coveralls.io/r/pluma/blutils?branch=master) [![Dependencies](https://david-dm.org/pluma/blutils.png?theme=shields.io)](https://david-dm.org/pluma/blutils)
+[![Build Status](https://travis-ci.org/pluma/blutils.png?branch=master)](https://travis-ci.org/pluma/blutils) [![Coverage Status](https://coveralls.io/repos/pluma/blutils/badge.png?branch=master)](https://coveralls.io/r/pluma/blutils?branch=master) [![Code Climate](https://codeclimate.com/github/pluma/blutils.png)](https://codeclimate.com/github/pluma/blutils)
 
 [![NPM status](https://nodei.co/npm/blutils.png?compact=true)](https://npmjs.org/package/blutils)
+
+[![Dependencies](https://david-dm.org/pluma/blutils.png?theme=shields.io)](https://david-dm.org/pluma/blutils)
 
 # Note
 

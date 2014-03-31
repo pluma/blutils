@@ -1,6 +1,6 @@
 {
   "name": "blutils",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "author": "Alan Plum <me@pluma.io>",
   "description": "Utilities for bluebird control flow.",
   "licenses": {
@@ -21,7 +21,7 @@
     "bluebird"
   ],
   "dependencies": {
-    "bluebird": "~1.1"
+    "bluebird": "~1.2"
   },
   "devDependencies": {
     "mocha": "~1.18",
