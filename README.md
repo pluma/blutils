@@ -16,8 +16,6 @@ When dealing with multiple arguments in promises, it is customary to pass them a
 
 If you find yourself using `.spread` a lot but still want to give the array manipulation helpers in this library a try, consider using [spread-args](https://github.com/pluma/spread-args) to convert functions that take positional arguments into functions that accept a simple argument array.
 
-As of version 0.4, `blutils.transform` has been removed. Consider using [transform-object](https://github.com/pluma/transform-object) instead.
-
 # Install
 
 ## With NPM
