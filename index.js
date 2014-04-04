@@ -1,4 +1,4 @@
-/*! blutils 0.7.2 Original author Alan Plum <me@pluma.io>. Released into the Public Domain under the UNLICENSE. @preserve */
+/*! blutils 0.8.0 Original author Alan Plum <me@pluma.io>. Released into the Public Domain under the UNLICENSE. @preserve */
 var Promise = require('bluebird'),
   slice = Function.prototype.call.bind(Array.prototype.slice);
 
@@ -10,6 +10,7 @@ exports.append = _pappend(false);
 exports.prepend = _pappend(true);
 exports.guard = pguard;
 exports.mutate = pmutate;
+exports.splice = psplice;
 
 function peacharg() {
   var fns = slice(arguments, 0), n = fns.length;
@@ -102,5 +103,26 @@ function pmutate(mutation) {
     });
     return Promise.all(arr)
     .thenReturn(arg);
+  };
+}
+
+function psplice(offset, count, fn) {
+  if (typeof count === 'function') {
+    fn = count;
+    count = null;
+  }
+  return function(arr) {
+    var start = offset >= 0 ? offset : offset + arr.length;
+    var end = count === +count ? start + count : arr.length;
+    var head = arr.slice(0, start);
+    var slice = arr.slice(start, end);
+    var tail = arr.slice(end);
+    return Promise.cast(slice)
+    .then(fn)
+    .then(function(result) {
+      return head
+      .concat(result)
+      .concat(tail);
+    });
   };
 }

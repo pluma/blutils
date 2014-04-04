@@ -229,6 +229,54 @@ Promise.cast(['foo', 'bar', {qux: 'baz', soup: 'chunky'}])
 .then(console.log); // ['foo', 'bar', {qux: 'BAZ', soup: 'chunky'}]
 ```
 
+## splice(offset:int, [count:int], fn:Function):Function
+
+Creates a function that takes an array as argument and will cut out a slice of length `count` starting at index `offset` and replace it with the result of passing the slice to the given function.
+
+If `offset` is negative, the index will be determined from the end of the array rather than the start.
+
+If `count` is not defined, it will default to the entire length of the array starting at the index.
+
+Example with array return value:
+
+```javascript
+Promise.cast(['a', 'b', 'c', 'd', 'e'])
+.then(blutils.splice(1, 2, function(slice) {
+    return slice.reverse();
+}))
+.then(console.log); // ['a', 'c', 'b', 'd', 'e']
+```
+
+Example with non-array return value:
+
+```javascript
+Promise.cast(['a', 'b', 'c', 'd', 'e'])
+.then(blutils.splice(1, 2, function(slice) {
+    return 'x';
+}))
+.then(console.log); // ['a', 'x', 'd', 'e']
+```
+
+Example with negative offset:
+
+```javascript
+Promise.cast(['a', 'b', 'c', 'd', 'e'])
+.then(blutils.splice(-4, 2, function(slice) {
+    return 'x';
+}))
+.then(console.log); // ['a', 'x', 'd', 'e']
+```
+
+Example without count:
+
+```javascript
+Promise.cast(['a', 'b', 'c', 'd', 'e'])
+.then(blutils.splice(1, function(slice) {
+    return 'x';
+}))
+.then(console.log); // ['a', 'x']
+```
+
 # Unlicense
 
 This is free and unencumbered public domain software. For more information, see http://unlicense.org/ or the accompanying [UNLICENSE](https://github.com/pluma/blutils/blob/master/UNLICENSE) file.
