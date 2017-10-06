@@ -1,3 +1,5 @@
+**NOTE:** This package is no longer being maintained. If you are interested in taking over as maintainer or are interested in the npm package name, get in touch by creating an issue.
+
 # Synopsis
 
 **blutils** is a utility library for [bluebird](https://github.com/petkaantonov/bluebird) and a direct fork of [qtils](https://github.com/pluma/qtils).
